@@ -1,14 +1,25 @@
 #!/bin/bash
+set -e  # Agar koi command fail ho to script stop ho jaye
 
-# Update the system
-sudo apt update
+# Update system
+apt update -y
+apt upgrade -y
 
-# Install Docker on the instance
-sudo apt install docker.io -y
+# Install dependencies
+apt install -y docker.io git
 
-# Clone our File
+# Enable and start Docker
+systemctl enable docker
+systemctl start docker
+
+# Clone repo
 git clone https://github.com/AyushAgraw/Netflix-clone-deployment.git
 
-cd Netflix-clone-deployment
+# Go to project directory
+cd /Netflix-clone-deployment/Netflix-Clone/
 
-sudo docker build -t netflix-clone .
+# Build Docker image
+docker build -t netflix-clone .
+
+# Run container
+docker run -d -p 10000:80 netflix-clone
